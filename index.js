@@ -117,14 +117,16 @@ async function run() {
         })
         ///user Registration operation end here//
 
-        ///-----booking package  operation start hare------//
 
+        ///-----booking package  operation start hare------//
 
         app.post("/bookingPackage", async (req, res) => {
 
             const result = await ordersCollection.insertOne(req.body);
             res.json(result);
         });
+
+
 
         app.get("/bookingPackage", async (req, res) => {
             const result = await ordersCollection.find({}).toArray();
@@ -146,7 +148,32 @@ async function run() {
 
             res.send(result)
 
+        });
+
+        //get single order 
+        app.get("/bookingPackage/single/:id", async (req, res) => {
+            const id = req.params.id;
+            // console.log("single id is = ", id)
+            const query = { _id: ObjectId(id) };
+            const result = await ordersCollection.findOne(query)
+            res.send(result)
+
+        });
+
+
+        app.put("/bookingPackage/single/:id", async (req, res) => {
+            const id = req.params.id;
+            const updateUser = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: updateUser,
+            };
+            const result = await ordersCollection.updateOne(filter, updateDoc, options);
+            res.json(result)
         })
+
+
 
 
 
